@@ -14,6 +14,11 @@ function Animatronic_initialise (guy: Sprite, index: number, AI: number, speed: 
     sprites.setDataNumber(guy, "Direction", 0)
     sprites.setDataBoolean(guy, "In Vent", false)
 }
+scene.onOverlapTile(SpriteKind.securitygaurd, assets.tile`myTile4`, function (sprite, location) {
+    if (Scene == 0) {
+        start_night_in_daycare()
+    }
+})
 function Move_on_to_next_waypoint (guy: Sprite, path: any[], target_index: number) {
     // MOVE ON TO THE NEXT WAYPOINT
     target_index = sprites.readDataNumber(guy, "Target") + 1
@@ -634,20 +639,20 @@ function Do_Scene_1 () {
     }
 }
 function open_walls_for_night () {
-    tiles.setTileAt(tiles.getTileLocation(68, 58), myTiles.tile23)
-    tiles.setTileAt(tiles.getTileLocation(69, 58), myTiles.tile23)
-    tiles.setTileAt(tiles.getTileLocation(70, 58), myTiles.tile23)
-    tiles.setTileAt(tiles.getTileLocation(71, 58), myTiles.tile23)
+    tiles.setTileAt(tiles.getTileLocation(68, 58), assets.tile`myTile21`)
+    tiles.setTileAt(tiles.getTileLocation(69, 58), assets.tile`myTile21`)
+    tiles.setTileAt(tiles.getTileLocation(70, 58), assets.tile`myTile21`)
+    tiles.setTileAt(tiles.getTileLocation(71, 58), assets.tile`myTile21`)
     tiles.setWallAt(tiles.getTileLocation(68, 58), false)
     tiles.setWallAt(tiles.getTileLocation(69, 58), false)
     tiles.setWallAt(tiles.getTileLocation(70, 58), false)
     tiles.setWallAt(tiles.getTileLocation(71, 58), false)
-    tiles.setTileAt(tiles.getTileLocation(38, 46), myTiles.tile23)
-    tiles.setTileAt(tiles.getTileLocation(39, 46), myTiles.tile23)
-    tiles.setTileAt(tiles.getTileLocation(40, 46), myTiles.tile23)
-    tiles.setTileAt(tiles.getTileLocation(41, 46), myTiles.tile23)
-    tiles.setTileAt(tiles.getTileLocation(42, 46), myTiles.tile23)
-    tiles.setTileAt(tiles.getTileLocation(43, 46), myTiles.tile23)
+    tiles.setTileAt(tiles.getTileLocation(38, 46), assets.tile`myTile21`)
+    tiles.setTileAt(tiles.getTileLocation(39, 46), assets.tile`myTile21`)
+    tiles.setTileAt(tiles.getTileLocation(40, 46), assets.tile`myTile21`)
+    tiles.setTileAt(tiles.getTileLocation(41, 46), assets.tile`myTile21`)
+    tiles.setTileAt(tiles.getTileLocation(42, 46), assets.tile`myTile21`)
+    tiles.setTileAt(tiles.getTileLocation(43, 46), assets.tile`myTile21`)
     tiles.setWallAt(tiles.getTileLocation(38, 46), false)
     tiles.setWallAt(tiles.getTileLocation(39, 46), false)
     tiles.setWallAt(tiles.getTileLocation(40, 46), false)
@@ -1719,7 +1724,7 @@ function initialize_sprite_positions_in_daycare () {
     Tangels_Lab.setPosition(385, 360)
     cleaning_tools.setPosition(940, 650)
     Kokos_mountain.setPosition(712, 120)
-    for (let value of tiles.getTilesByType(myTiles.tile31)) {
+    for (let value of tiles.getTilesByType(assets.tile`myTile29`)) {
         Chairs = sprites.create(img`
             .............................................
             .............................................
@@ -1768,7 +1773,7 @@ function initialize_sprite_positions_in_daycare () {
             .......ffff.....ffff.....ffff.....ffff.......
             `, SpriteKind.chair)
         tiles.placeOnTile(Chairs, value)
-        tiles.setTileAt(value, myTiles.transparency16)
+        tiles.setTileAt(value, assets.tile`transparency16`)
     }
     dummy_waypoint.setPosition(tilemap_to_pixels(-10), tilemap_to_pixels(-10))
     security_camera_desk_thigny.setPosition(tilemap_to_pixels(33), tilemap_to_pixels(59))
@@ -2069,11 +2074,6 @@ function Make_kokos_path () {
     Path_adder(Kokos_path, 67, 69, "grey", 0)
     Path_adder(Kokos_path, 50, 69, "grey", 0)
 }
-scene.onOverlapTile(SpriteKind.securitygaurd, myTiles.tile6, function (sprite, location) {
-    if (Scene == 0) {
-        start_night_in_daycare()
-    }
-})
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     if (screen2 == 2) {
         if (Change_camera()) {
@@ -2444,18 +2444,18 @@ night_3.setPosition(70, 10)
 night_4 = sprites.create(img`
     f f f f f f f f f f f f f f f f 
     f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
-    f 1 3 1 1 1 1 3 1 1 1 1 1 1 1 f 
-    f 1 3 1 1 1 1 3 1 1 1 1 1 1 1 f 
-    f 1 3 1 1 1 1 3 1 1 1 1 1 1 1 f 
-    f 1 3 1 1 1 1 3 1 1 1 1 1 1 1 f 
-    f 1 3 1 1 1 1 3 1 1 1 1 1 1 1 f 
-    f 1 3 3 3 3 3 3 3 3 3 3 1 1 1 f 
-    f 1 1 1 1 1 1 3 1 1 1 1 1 1 1 f 
-    f 1 1 1 1 1 1 3 1 1 1 1 1 1 1 f 
-    f 1 1 1 1 1 1 3 1 1 1 1 1 1 1 f 
-    f 1 1 1 1 1 1 3 1 1 1 1 1 1 1 f 
-    f 1 1 1 1 1 1 3 1 1 1 1 1 1 1 f 
-    f 1 1 1 1 1 1 3 1 1 1 1 1 1 1 f 
+    f 1 4 1 1 1 1 2 1 1 1 1 1 1 1 f 
+    f 1 4 1 1 1 1 2 1 1 1 1 1 1 1 f 
+    f 1 4 1 1 1 1 2 1 1 1 1 1 1 1 f 
+    f 1 4 1 1 1 1 2 1 1 1 1 1 1 1 f 
+    f 1 4 1 1 1 1 2 1 1 1 1 1 1 1 f 
+    f 1 4 3 3 3 3 2 8 8 8 8 1 1 1 f 
+    f 1 1 1 1 1 1 e 1 1 1 1 1 1 1 f 
+    f 1 1 1 1 1 1 e 1 1 1 1 1 1 1 f 
+    f 1 1 1 1 1 1 e 1 1 1 1 1 1 1 f 
+    f 1 1 1 1 1 1 e 1 1 1 1 1 1 1 f 
+    f 1 1 1 1 1 1 e 1 1 1 1 1 1 1 f 
+    f 1 1 1 1 1 1 e 1 1 1 1 1 1 1 f 
     f 1 1 1 1 1 1 1 1 1 1 1 1 1 1 f 
     f f f f f f f f f f f f f f f f 
     `, SpriteKind.Player)
