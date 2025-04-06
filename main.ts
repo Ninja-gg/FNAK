@@ -5,6 +5,14 @@ namespace SpriteKind {
     export const Overlay = SpriteKind.create()
     export const Text = SpriteKind.create()
 }
+function Set_All_Animatronic_Data_To_Number (Data_Name: string, Value: number) {
+    sprites.setDataNumber(Koko, Data_Name, Value)
+    sprites.setDataNumber(Dr_Tangle, Data_Name, Value)
+    sprites.setDataNumber(Maquad, Data_Name, Value)
+    sprites.setDataNumber(Withered_Bongong, Data_Name, Value)
+    sprites.setDataNumber(white_Foxtail, Data_Name, Value)
+    sprites.setDataNumber(Klevin, Data_Name, Value)
+}
 function Animatronic_initialise (guy: Sprite, index: number, AI: number, speed: number) {
     sprites.setDataNumber(guy, "Index", index)
     sprites.setDataNumber(guy, "AI", AI)
@@ -13,6 +21,9 @@ function Animatronic_initialise (guy: Sprite, index: number, AI: number, speed: 
     sprites.setDataNumber(guy, "Target", 2)
     sprites.setDataNumber(guy, "Direction", 0)
     sprites.setDataBoolean(guy, "In Vent", false)
+    sprites.setDataNumber(guy, "Door", -2)
+    sprites.setDataNumber(guy, "Door Wait Time", 20)
+    sprites.setDataNumber(guy, "Abandon Time", 30)
 }
 scene.onOverlapTile(SpriteKind.securitygaurd, assets.tile`myTile4`, function (sprite, location) {
     if (Scene == 0) {
@@ -22,6 +33,7 @@ scene.onOverlapTile(SpriteKind.securitygaurd, assets.tile`myTile4`, function (sp
 function Move_on_to_next_waypoint (guy: Sprite, path: any[], target_index: number) {
     // MOVE ON TO THE NEXT WAYPOINT
     target_index = sprites.readDataNumber(guy, "Target") + 1
+    // INSERT STUFF TO DO AT END OF PATH
     if (target_index >= path.length) {
         Teleport_to_waypoint(guy, path, 1)
         return
@@ -660,6 +672,28 @@ function open_walls_for_night () {
     tiles.setWallAt(tiles.getTileLocation(42, 46), false)
     tiles.setWallAt(tiles.getTileLocation(43, 46), false)
 }
+function SetVariablesForNight () {
+    if (night == 1) {
+        Set_All_Animatronic_Data_To_Number("Door Wait Time", 30)
+        Set_All_Animatronic_Data_To_Number("Abandon Time", 25)
+        sprites.setDataNumber(Koko, "Door Wait Time", 25)
+        sprites.setDataNumber(Koko, "Abandon Time", 15)
+    } else if (night == 2) {
+        Set_All_Animatronic_Data_To_Number("Door Wait Time", 30)
+        Set_All_Animatronic_Data_To_Number("Abandon Time", 20)
+    } else if (night == 3) {
+        Set_All_Animatronic_Data_To_Number("Door Wait Time", 30)
+        Set_All_Animatronic_Data_To_Number("Abandon Time", 20)
+    } else if (night == 4) {
+        Set_All_Animatronic_Data_To_Number("Door Wait Time", 20)
+        Set_All_Animatronic_Data_To_Number("Abandon Time", 30)
+    } else if (night == 5) {
+        Set_All_Animatronic_Data_To_Number("Door Wait Time", 20)
+        Set_All_Animatronic_Data_To_Number("Abandon Time", 30)
+    } else {
+        console.logValue("Error, night number is", night)
+    }
+}
 function Make_White_Foxtails_path () {
     Path_adder(White_Foxtails_Path, 99, 27, "brown", 1)
     Path_adder(White_Foxtails_Path, 92, 31, "grey", 2)
@@ -1085,17 +1119,25 @@ function Dr_Tangles_direction_setting () {
     }
 }
 function Do_Scene_2 () {
-    Update_animatronic(Maquad, Maquads_path)
-    Update_animatronic(Withered_Bongong, Withered_Bongongs_path)
-    temp = sprites.readDataNumber(Dr_Tangle, "Direction")
-    Update_animatronic(Dr_Tangle, Dr_Tangles_path)
-    if (sprites.readDataNumber(Dr_Tangle, "Direction") != temp) {
-        Dr_Tangles_direction_setting()
+    if (sprites.readDataNumber(Maquad, "Door") == -2) {
+        Update_animatronic(Maquad, Maquads_path)
     }
-    temp = sprites.readDataNumber(Koko, "Direction")
-    Update_animatronic(Koko, Kokos_path)
-    if (sprites.readDataNumber(Koko, "Direction") != temp) {
-        Kokos_direction_setting()
+    if (sprites.readDataNumber(Withered_Bongong, "Door") == -2) {
+        Update_animatronic(Withered_Bongong, Withered_Bongongs_path)
+    }
+    if (sprites.readDataNumber(Dr_Tangle, "Door") == -2) {
+        temp = sprites.readDataNumber(Dr_Tangle, "Direction")
+        Update_animatronic(Dr_Tangle, Dr_Tangles_path)
+        if (sprites.readDataNumber(Dr_Tangle, "Direction") != temp) {
+            Dr_Tangles_direction_setting()
+        }
+    }
+    if (sprites.readDataNumber(Koko, "Door") == -2) {
+        temp = sprites.readDataNumber(Koko, "Direction")
+        Update_animatronic(Koko, Kokos_path)
+        if (sprites.readDataNumber(Koko, "Direction") != temp) {
+            Kokos_direction_setting()
+        }
     }
 }
 function White_Foxtail_backwards () {
@@ -1965,29 +2007,34 @@ function Do_Scene_0 () {
         DoorWaitTimer = 15000
         DoorAbandonTimer = 40000
         start_night_in_daycare()
+        SetVariablesForNight()
         scene.cameraFollowSprite(Maquad)
     } else if (seletor.overlapsWith(night_2)) {
         night = 2
         DoorWaitTimer = 15000
         DoorAbandonTimer = 30000
         start_night_in_daycare()
+        SetVariablesForNight()
         scene.cameraFollowSprite(Withered_Bongong)
     } else if (seletor.overlapsWith(night_3)) {
         night = 3
         DoorWaitTimer = 12000
         DoorAbandonTimer = 30000
         scene.cameraFollowSprite(Dr_Tangle)
+        SetVariablesForNight()
         start_night_in_daycare()
     } else if (seletor.overlapsWith(night_4)) {
         night = 4
         DoorWaitTimer = 10000
         DoorAbandonTimer = 25000
         scene.cameraFollowSprite(Koko)
+        SetVariablesForNight()
         start_night_in_daycare()
     } else if (seletor.overlapsWith(night_5)) {
         night = 5
         DoorWaitTimer = 8000
         DoorAbandonTimer = 20000
+        SetVariablesForNight()
         start_night_in_daycare()
     } else if (seletor.overlapsWith(Custom_night)) {
         night = -1
@@ -2306,7 +2353,6 @@ let index = 0
 let Kokos_Direction = 0
 let temp = 0
 let Dr_Tangles_Direction = 0
-let white_Foxtail: Sprite = null
 let phone_caals = 0
 let security_camera_desk_thigny: Sprite = null
 let Kokos_mountain: Sprite = null
@@ -2321,6 +2367,7 @@ let Dr_Tangles_path: Sprite[] = []
 let Withered_Bongongs_path: Sprite[] = []
 let Maquads_path: Sprite[] = []
 let target_index = 0
+let white_Foxtail: Sprite = null
 let Scene = 0
 let DoorSW: Sprite = null
 let MapLocator: Sprite = null
